@@ -12,14 +12,16 @@ async function carregarProdutos() {
 
     produtos.forEach(p => {
       const li = document.createElement("li");
-      li.textContent = `${p.nome} - R$ ${p.preco}`;
+      li.innerHTML = `
+        ${p.nome} - R$ ${p.preco}
+        <button onclick="deletarProduto(${p.id})">Apagar</button>
+      `;
       lista.appendChild(li);
     });
   } catch (erro) {
     console.error("Erro ao carregar produtos:", erro);
   }
 }
-
 
 async function carregarEstatisticas() {
   const total = document.getElementById("total-produtos");
@@ -44,7 +46,6 @@ async function carregarEstatisticas() {
     console.error(erro);
   }
 }
-
 
 async function cadastrarProduto() {
   const nome = document.getElementById("nome").value;
@@ -73,6 +74,21 @@ async function cadastrarProduto() {
   }
 }
 
+async function deletarProduto(id) {
+  try {
+    const res = await fetch(`${apiUrl}/${id}`, {
+      method: "DELETE"
+    });
+
+    const data = await res.json();
+
+    alert(data.mensagem);
+    carregarProdutos();
+  } catch (erro) {
+    console.error("Erro ao deletar:", erro);
+    alert("Erro ao deletar produto.");
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("lista-produtos")) {

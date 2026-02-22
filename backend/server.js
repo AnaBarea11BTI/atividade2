@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import { connection } from "./db.js";
@@ -28,6 +27,19 @@ app.post("/produtos", (req, res) => {
       return res.status(500).json(err);
     }
     res.json({ mensagem: "Produto cadastrado com sucesso!" });
+  });
+});
+
+app.delete("/produtos/:id", (req, res) => {
+  const { id } = req.params;
+
+  const sql = "DELETE FROM produtos_anabarea WHERE id = ?";
+  connection.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+
+    res.json({ mensagem: "Produto deletado com sucesso!" });
   });
 });
 
