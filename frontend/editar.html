@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Produto</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h2>Editar Produto</h2>
+
+    <form onsubmit="atualizarProduto(event)">
+      
+      <label>Nome</label>
+      <input type="text" id="nome">
+
+      <label>Preço</label>
+      <input type="text" id="preco" placeholder="0,00">
+
+      <label>Descrição</label>
+      <textarea id="descricao"></textarea>
+
+      <button type="submit">Salvar alterações</button>
+    </form>
+
+    <a href="index.html">Voltar</a>
+  </div>
+
+  <script src="editar.js"></script>
+
+</body>
+</html>

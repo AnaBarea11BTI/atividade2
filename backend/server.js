@@ -17,6 +17,17 @@ app.get("/produtos", (req, res) => {
   });
 });
 
+app.get("/produtos/:id", (req, res) => {
+  const { id } = req.params;
+
+  const sql = "SELECT * FROM produtos_anabarea WHERE id = ?";
+  connection.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json(err);
+
+    res.json(results[0]);
+  });
+});
+
 app.post("/produtos", (req, res) => {
   const { nome, preco, descricao } = req.body;
 
@@ -30,11 +41,25 @@ app.post("/produtos", (req, res) => {
   });
 });
 
+app.put("/produtos/:id", (req, res) => {
+  const { id } = req.params;
+  const { nome, preco, descricao } = req.body;
+
+  const sql =
+    "UPDATE produtos_anabarea SET nome = ?, preco = ?, descricao = ? WHERE id = ?";
+
+  connection.query(sql, [nome, preco, descricao, id], (err) => {
+    if (err) return res.status(500).json(err);
+
+    res.json({ mensagem: "Produto atualizado com sucesso!" });
+  });
+});
+
 app.delete("/produtos/:id", (req, res) => {
   const { id } = req.params;
 
   const sql = "DELETE FROM produtos_anabarea WHERE id = ?";
-  connection.query(sql, [id], (err, result) => {
+  connection.query(sql, [id], (err) => {
     if (err) {
       return res.status(500).json(err);
     }

@@ -25,7 +25,7 @@ header {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-h2 {
+h1, h2 {
   margin-bottom: 20px;
   color: #333;
   text-align: center;
@@ -33,14 +33,20 @@ h2 {
 
 form {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   max-width: 400px;
   margin: 0 auto;
+}
+
+label {
+  font-weight: bold;
+  font-size: 14px;
 }
 
 input, textarea {
   width: 100%;
   padding: 10px;
-  margin-bottom: 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
@@ -52,7 +58,6 @@ textarea {
 }
 
 button {
-  width: 100%;
   padding: 10px;
   border: none;
   border-radius: 8px;
@@ -85,14 +90,24 @@ li {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-li button {
-  width: auto;
-  background-color: #ef4444;
-  padding: 6px 10px;
-  font-size: 12px;
+li div:last-child {
+  display: flex;
+  gap: 8px;
 }
 
-li button:hover {
+li button:first-child {
+  background-color: #3b82f6;
+}
+
+li button:first-child:hover {
+  background-color: #2563eb;
+}
+
+li button:last-child {
+  background-color: #ef4444;
+}
+
+li button:last-child:hover {
   background-color: #dc2626;
 }
 

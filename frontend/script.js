@@ -1,5 +1,16 @@
 const apiUrl = "http://localhost:3000/produtos";
 
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("lista-produtos")) {
+    carregarProdutos();
+  }
+
+  if (document.getElementById("lista-estatisticas")) {
+    carregarEstatisticas();
+  }
+});
+
+
 async function carregarProdutos() {
   try {
     const res = await fetch(apiUrl);
@@ -12,48 +23,77 @@ async function carregarProdutos() {
 
     produtos.forEach(p => {
       const li = document.createElement("li");
+
+      li.style.display = "flex";
+      li.style.justifyContent = "space-between";
+      li.style.alignItems = "center";
+      li.style.marginBottom = "10px";
+
       li.innerHTML = `
-        ${p.nome} - R$ ${p.preco}
-        <button onclick="deletarProduto(${p.id})">Apagar</button>
+        <div>
+          <strong>${p.nome}</strong><br>
+          R$ ${parseFloat(p.preco).toFixed(2)}<br>
+          <small>${p.descricao || ""}</small>
+        </div>
+        <div>
+          <button onclick="editarProduto(${p.id})">Editar</button>
+          <button onclick="deletarProduto(${p.id})">Apagar</button>
+        </div>
       `;
+
       lista.appendChild(li);
     });
+
   } catch (erro) {
     console.error("Erro ao carregar produtos:", erro);
   }
 }
 
+
 async function carregarEstatisticas() {
-  const total = document.getElementById("total-produtos");
-  const lista = document.getElementById("lista-estatisticas");
-
-  if (!total || !lista) return;
-
   try {
     const res = await fetch(apiUrl);
     const produtos = await res.json();
 
+    const total = document.getElementById("total-produtos");
+    const lista = document.getElementById("lista-estatisticas");
+
+    if (!total || !lista) return;
+
     total.textContent = `Total de produtos cadastrados: ${produtos.length}`;
 
     lista.innerHTML = "";
+
     produtos.forEach(p => {
       const li = document.createElement("li");
-      li.textContent = p.nome;
+
+      li.innerHTML = `
+        <strong>${p.nome}</strong><br>
+        R$ ${parseFloat(p.preco).toFixed(2)}<br>
+        <small>${p.descricao || ""}</small>
+      `;
+
       lista.appendChild(li);
     });
+
   } catch (erro) {
-    total.textContent = "Erro ao conectar com o servidor.";
-    console.error(erro);
+    console.error("Erro:", erro);
+    document.getElementById("total-produtos").textContent =
+      "Erro ao conectar com o servidor.";
   }
 }
 
-async function cadastrarProduto() {
-  const nome = document.getElementById("nome").value;
-  const preco = document.getElementById("preco").value;
-  const descricao = document.getElementById("descricao").value;
+function editarProduto(id) {
+  window.location.href = `editar.html?id=${id}`;
+}
 
-  if (!nome || !preco) {
-    alert("Preencha nome e preço!");
+async function cadastrarProduto() {
+  const nome = document.getElementById("nome").value.trim();
+  const preco = parseFloat(document.getElementById("preco").value);
+  const descricao = document.getElementById("descricao").value.trim();
+
+  if (!nome || isNaN(preco)) {
+    alert("Preencha nome e preço corretamente!");
     return;
   }
 
@@ -68,34 +108,27 @@ async function cadastrarProduto() {
 
     alert("Produto cadastrado com sucesso!");
     window.location.href = "index.html";
+
   } catch (erro) {
+    console.error("Erro ao cadastrar:", erro);
     alert("Erro ao cadastrar produto.");
-    console.error(erro);
   }
 }
 
+
 async function deletarProduto(id) {
+  if (!confirm("Tem certeza que deseja apagar?")) return;
+
   try {
-    const res = await fetch(`${apiUrl}/${id}`, {
+    await fetch(`${apiUrl}/${id}`, {
       method: "DELETE"
     });
 
-    const data = await res.json();
-
-    alert(data.mensagem);
+    alert("Produto deletado!");
     carregarProdutos();
+
   } catch (erro) {
     console.error("Erro ao deletar:", erro);
     alert("Erro ao deletar produto.");
   }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("lista-produtos")) {
-    carregarProdutos();
-  }
-
-  if (document.getElementById("total-produtos")) {
-    carregarEstatisticas();
-  }
-});
